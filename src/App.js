@@ -4,27 +4,33 @@ import api from './services/api';
 
 function App() {
 
-  const [repositories,setRepository] = useState([])
+  const [repositories,setRepositories] = useState([])
 
   useEffect(() => {
     api.get('repositories').then(response =>{
-      setRepository(response.data)
+      setRepositories(response.data)
     })
   },[])
 
   async function handleAddRepository() {
     // TODO
     const response = await api.post('repositories',{
-      title:`Novo projeto ${Date.now()}`
+      title:`Novo projeto`,
+      url: 'https://github.com',
+      techs: ['Node.js', 'React.js']
     })
     const repository = response.data;
-    setRepository([...repositories,repository])
+    setRepositories([...repositories,repository])
   }
 
-  async function handleRemoveRepository() {
-    // TODO
-    //  const request = await api.delete('repository',{})
-
+  async function handleRemoveRepository(id) {
+    //TODO
+     await api.delete(`repositories/${id}`)
+ 
+       //remove da listagem o repositorio que foi excluido comparando pelo ID
+       const updatedRepositories = repositories.filter(repository => repository.id !== id)
+        setRepositories(updatedRepositories);
+    
   }
 
   return (
